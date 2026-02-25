@@ -12,26 +12,30 @@ export function drawMirroredVideo(ctx, video, W, H) {
 }
 
 /**
- * Draw an emoji overlay anchored to a face landmark.
- * Landmark x is mirrored since video is drawn mirrored.
+ * Draw a PNG/SVG overlay anchored to a face landmark.
+ * Image x is mirrored to match the mirrored video.
  *
  * @param {CanvasRenderingContext2D} ctx
  * @param {Array} landmarks - normalized landmarks array
  * @param {object} overlay - overlay config from OVERLAYS
+ * @param {Object} overlayImages - map of { [id]: HTMLImageElement }
  * @param {number} W - canvas width
  * @param {number} H - canvas height
  */
-export function drawEmojiOverlay(ctx, landmarks, overlay, W, H) {
-  const fw = faceWidth(landmarks, W);
-  const size = Math.max(20, fw * overlay.sizeRatio);
-  const { x, y } = getLandmarkPx(landmarks, overlay.anchor, W, H);
+export function drawImageOverlay(ctx, landmarks, overlay, overlayImages, W, H) {
+  const img = overlayImages[overlay.id];
+  if (!img) return;
 
-  // Mirror x since video is mirrored
+  const fw = faceWidth(landmarks, W);
+  const drawW = Math.max(60, fw * overlay.sizeRatio);
+
+  // Preserve the image's natural aspect ratio
+  const aspect = img.naturalWidth > 0 ? img.naturalWidth / img.naturalHeight : 1;
+  const drawH = drawW / aspect;
+
+  const { x, y } = getLandmarkPx(landmarks, overlay.anchor, W, H);
   const mirroredX = W - x;
   const offsetY = fw * overlay.offsetYRatio;
 
-  ctx.font = `${size}px serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(overlay.emoji, mirroredX, y + offsetY);
+  ctx.drawImage(img, mirroredX - drawW / 2, y + offsetY - drawH / 2, drawW, drawH);
 }

@@ -1,13 +1,12 @@
 import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { drawMirroredVideo, drawEmojiOverlay } from '../utils/canvasUtils';
+import { drawMirroredVideo, drawImageOverlay } from '../utils/canvasUtils';
 
 const CameraCanvas = forwardRef(function CameraCanvas(
-  { videoRef, landmarks, activeOverlay, flash },
+  { videoRef, landmarks, activeOverlay, overlayImages, flash },
   ref
 ) {
   const canvasRef = useRef(null);
 
-  // Expose canvas element to parent via ref
   useImperativeHandle(ref, () => canvasRef.current, []);
 
   useEffect(() => {
@@ -31,8 +30,8 @@ const CameraCanvas = forwardRef(function CameraCanvas(
 
       drawMirroredVideo(ctx, video, W, H);
 
-      if (landmarks && activeOverlay) {
-        drawEmojiOverlay(ctx, landmarks, activeOverlay, W, H);
+      if (landmarks && activeOverlay && overlayImages) {
+        drawImageOverlay(ctx, landmarks, activeOverlay, overlayImages, W, H);
       }
 
       if (flash) {
@@ -45,7 +44,7 @@ const CameraCanvas = forwardRef(function CameraCanvas(
 
     rafId = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(rafId);
-  }, [videoRef, landmarks, activeOverlay, flash]);
+  }, [videoRef, landmarks, activeOverlay, overlayImages, flash]);
 
   return (
     <canvas

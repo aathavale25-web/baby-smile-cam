@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import useCamera from './hooks/useCamera';
 import useSmileDetector from './hooks/useSmileDetector';
 import useCapture from './hooks/useCapture';
+import useOverlayImages from './hooks/useOverlayImages';
 import { useCaptureFlash } from './components/CaptureFlash';
 import CameraCanvas from './components/CameraCanvas';
 import OverlaySelector from './components/OverlaySelector';
@@ -26,6 +27,7 @@ export default function App() {
 
   const { videoRef, isReady, error, toggleCamera, startCamera } = useCamera();
   const { photos, addPhoto, clearPhotos } = useCapture();
+  const overlayImages = useOverlayImages();
   const flash = useCaptureFlash(captureCount);
 
   useEffect(() => { startCamera('user'); }, [startCamera]);
@@ -63,6 +65,7 @@ export default function App() {
           videoRef={videoRef}
           landmarks={landmarks}
           activeOverlay={activeOverlay}
+          overlayImages={overlayImages}
           flash={flash}
         />
         <button
@@ -79,7 +82,11 @@ export default function App() {
         )}
       </div>
 
-      <OverlaySelector activeId={activeOverlay.id} onChange={setActiveOverlay} />
+      <OverlaySelector
+        activeId={activeOverlay.id}
+        overlayImages={overlayImages}
+        onChange={setActiveOverlay}
+      />
       <Gallery photos={photos} onClear={clearPhotos} />
     </div>
   );
