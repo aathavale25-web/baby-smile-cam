@@ -1,4 +1,17 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-display: 'Fredoka', sans-serif;
+  --font-sans: 'Nunito', sans-serif;
+
+  /* Claymorphism design tokens */
+  --color-clay-primary: #0EA5E9;
+  --color-clay-secondary: #38BDF8;
+  --color-clay-accent: #FBBF24;
+  --color-clay-bg: #F0F9FF;
+  --color-clay-text: #0C4A6E;
+}
 
 * {
   margin: 0;
@@ -8,6 +21,44 @@
 
 body {
   min-height: 100vh;
-  background-color: #0f0f0f;
-  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 50%, #fce7f3 100%);
+}
+
+/* Claymorphism card */
+.clay-card {
+  background: white;
+  border-radius: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    5px 5px 0px rgba(0, 0, 0, 0.08),
+    inset -2px -2px 8px rgba(0, 0, 0, 0.04),
+    inset 2px 2px 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Claymorphism button base */
+.clay-btn {
+  border-radius: 14px;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.1),
+    inset -1px -1px 5px rgba(0, 0, 0, 0.06),
+    inset 1px 1px 5px rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.clay-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    1px 1px 0px rgba(0, 0, 0, 0.1),
+    inset -1px -1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
